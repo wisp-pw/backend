@@ -6,22 +6,17 @@ pub async fn get() -> impl IntoResponse {
 
 #[cfg(test)]
 mod tests {
-    use crate::{prelude::*, router};
-
-    use axum::{body::Body, http::Request};
+    use crate::{prelude::*, setup_app};
 
     #[tokio::test]
     async fn index_test() -> Result<()> {
-        let (router, _) = router().await.unwrap();
+        let (router, _) = setup_app().await.unwrap();
 
-        let response = router
-            .oneshot(Request::builder().uri("/").body(Body::empty())?)
-            .await?;
+        let client = TestClient::new(router);
+        let response = client.get("/").send().await;
 
         assert_eq!(response.status(), StatusCode::OK);
-
-        let body = hyper::body::to_bytes(response.into_body()).await?;
-        assert_eq!(&body[..], b"hello tiny gay person");
+        assert_eq!(response.text().await, "hello tiny gay person");
 
         Ok(())
     }

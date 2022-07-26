@@ -19,5 +19,6 @@ dotenv = "0.15.0"
 dotenv_codegen = "0.15.0"
 
 [dev-dependencies]
+axum-test-helper = "0.1.1"
 hyper = { version = "0.14.20", features = ["full"] }
 tower = { version = "0.4.13", features = ["util"] }

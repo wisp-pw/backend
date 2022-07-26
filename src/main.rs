@@ -15,21 +15,21 @@ use tracing_subscriber::util::SubscriberInitExt;
 
 use crate::{settings::WispSettings, state::WispState};
 
-pub async fn router() -> Result<(Router, SocketAddr)> {
+pub async fn setup_app() -> Result<(Router, SocketAddr)> {
     // setup settings and state
     let settings = Arc::new(WispSettings::new()?);
     let state = WispState::new(&settings).await?;
 
-    // setup router
+    // setup setup_app
     let state = Arc::new(state);
 
     let bind_addr = settings.host.clone();
-    let router = Router::new()
+    let setup_app = Router::new()
         .route("/", get(routes::index::get))
         .layer(Extension(settings))
         .layer(Extension(state));
 
-    Ok((router, bind_addr))
+    Ok((setup_app, bind_addr))
 }
 
 #[tokio::main]
@@ -43,14 +43,14 @@ async fn main() -> Result<()> {
         .finish()
         .init();
 
-    // get router instance
-    let (router, bind_addr) = router().await?;
+    // get setup_app instance
+    let (setup_app, bind_addr) = setup_app().await?;
 
     // serve app
     info!("Listening on http://{bind_addr}");
 
     axum::Server::bind(&bind_addr)
-        .serve(router.into_make_service())
+        .serve(setup_app.into_make_service())
         .await?;
 
     Ok(())

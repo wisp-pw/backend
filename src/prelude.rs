@@ -4,9 +4,9 @@ pub use std::sync::Arc;
 pub use tracing::log::{debug, error, info, trace, warn};
 
 pub use axum::{
+    http::StatusCode,
     response::{IntoResponse, Response},
     Extension, Json,
-    http::StatusCode
 };
 pub use serde::{Deserialize, Serialize};
 pub use serde_json::json;
@@ -19,3 +19,6 @@ pub use crate::state::*;
 
 #[cfg(test)]
 pub use tower::{Service, ServiceExt};
+
+#[cfg(test)]
+pub use axum_test_helper::TestClient;
