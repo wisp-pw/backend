@@ -5,10 +5,11 @@ mod routes;
 mod services;
 mod settings;
 mod state;
+mod models;
 
 use std::{net::SocketAddr, sync::Arc};
 
-use axum::{routing::get, Router};
+use axum::{routing::{get, post}, Router};
 use prelude::*;
 use tracing::Level;
 use tracing_subscriber::util::SubscriberInitExt;
@@ -26,6 +27,7 @@ pub async fn setup_app() -> Result<(Router, SocketAddr)> {
     let bind_addr = settings.host.clone();
     let setup_app = Router::new()
         .route("/", get(routes::index::get))
+        .route("/auth/register", post(routes::auth::register::post))
         .layer(Extension(settings))
         .layer(Extension(state));
 

@@ -1,13 +1,17 @@
+use sqlx::sqlite::SqlitePoolOptions;
+use sqlx::SqlitePool;
+
 use crate::prelude::*;
-use crate::{repositories::user::UserRepository, settings::WispSettings};
+use crate::settings::WispSettings;
 
 pub struct WispState {
-    pub user_repository: UserRepository,
+    pub sql_pool: SqlitePool,
 }
 
 impl WispState {
     pub async fn new(settings: &Arc<WispSettings>) -> Result<WispState> {
-        let user_repository = UserRepository::new(settings).await?;
-        Ok(WispState { user_repository })
+        let pool = SqlitePoolOptions::new().connect(&settings.db_uri).await?;
+
+        Ok(WispState { sql_pool: pool })
     }
 }
