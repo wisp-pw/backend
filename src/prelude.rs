@@ -6,6 +6,7 @@ pub use tracing::log::{debug, error, info, trace, warn};
 pub use axum::{
     response::{IntoResponse, Response},
     Extension, Json,
+    http::StatusCode
 };
 pub use serde::{Deserialize, Serialize};
 pub use serde_json::json;
@@ -13,3 +14,8 @@ pub use serde_json::json;
 pub use crate::response::*;
 pub use crate::settings::*;
 pub use crate::state::*;
+
+// testing imports
+
+#[cfg(test)]
+pub use tower::{Service, ServiceExt};
