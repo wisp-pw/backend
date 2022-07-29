@@ -5,11 +5,11 @@ use argon2::{
     Argon2,
 };
 
-#[derive(Deserialize)]
+#[derive(Serialize, Deserialize)]
 pub struct RegisterRequest {
-    email: String,
-    username: String,
-    password: String,
+    pub(crate) email: String,
+    pub(crate) username: String,
+    pub(crate) password: String,
 }
 
 pub enum RegisterError {

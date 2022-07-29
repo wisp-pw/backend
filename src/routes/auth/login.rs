@@ -2,10 +2,10 @@ use crate::{prelude::*, repositories::user::UserRepository};
 
 use argon2::{Argon2, PasswordHash, PasswordVerifier};
 
-#[derive(Deserialize)]
+#[derive(Serialize, Deserialize)]
 pub struct LoginRequest {
-    email_or_username: String,
-    password: String,
+    pub(crate) email_or_username: String,
+    pub(crate) password: String,
 }
 
 pub enum LoginError {
