@@ -4,6 +4,7 @@ pub use std::sync::Arc;
 pub use tracing::log::{debug, error, info, trace, warn};
 
 pub use crate::models::user::User;
+pub use crate::option::OptionExtension;
 
 pub use axum::{
     http::StatusCode,

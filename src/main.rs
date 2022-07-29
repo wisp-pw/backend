@@ -6,6 +6,7 @@ mod services;
 mod settings;
 mod state;
 mod models;
+mod option;
 
 use std::{net::SocketAddr, sync::Arc};
 

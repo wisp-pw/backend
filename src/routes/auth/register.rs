@@ -7,27 +7,53 @@ pub struct RegisterRequest {
     password: String,
 }
 
-pub async fn post(Extension(state): Extension<Arc<WispState>>, Json(request): Json<RegisterRequest>) -> Response {
-    // check email is not in use
-    match UserRepository::get_user_by_email(&state.sql_pool, &request.email).await {
-        Ok(Some(_)) => return GenericResponse::bad_req_error_msg("EMAIL_USED"),
-        Err(_) => return GenericResponse::internal_error(),
-        _ => {}
+pub enum RegisterError {
+    EmailUsed,
+    UsernameUsed,
+    UnexpectedError,
+}
+
+impl IntoResponse for RegisterError {
+    fn into_response(self) -> Response {
+        let (status, message) = match self {
+            RegisterError::EmailUsed => (StatusCode::BAD_REQUEST, "EMAIL_USED"),
+            RegisterError::UsernameUsed => (StatusCode::BAD_REQUEST, "USERNAME_USED"),
+            RegisterError::UnexpectedError => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "An unexpected error has occurred.",
+            ),
+        };
+
+        let body = Json(json!({ "error": message }));
+        (status, body).into_response()
     }
+}
+
+pub async fn post(
+    Extension(state): Extension<Arc<WispState>>,
+    Json(request): Json<RegisterRequest>,
+) -> Result<Response, RegisterError> {
+    // check email is not in use
+    UserRepository::get_user_by_email(&state.sql_pool, &request.email)
+        .await
+        .map_err(|_| RegisterError::UnexpectedError)?
+        .ok_err(RegisterError::EmailUsed)?;
 
     // check username is not in use
-    match UserRepository::get_user_by_username(&state.sql_pool, &request.username).await {
-        Ok(Some(_)) => return GenericResponse::bad_req_error_msg("USERNAME_USED"),
-        Err(_) => return GenericResponse::internal_error(),
-        _ => {}
-    }
+    UserRepository::get_user_by_username(&state.sql_pool, &request.username)
+        .await
+        .map_err(|_| RegisterError::UnexpectedError)?
+        .ok_err(RegisterError::UsernameUsed)?;
 
     // create user
     // TODO: Hash password
-    match UserRepository::create_user(&state.sql_pool, &request.username, &request.email, &request.password).await {
-        Err(_) => return GenericResponse::internal_error(),
-        _ => {}
-    }
-
-    GenericResponse::ok_msg("CREATED")
+    UserRepository::create_user(
+        &state.sql_pool,
+        &request.username,
+        &request.email,
+        &request.password,
+    )
+    .await
+    .map_err(|_| RegisterError::UnexpectedError)
+    .map(|_| GenericResponse::ok_msg("CREATED"))
 }
