@@ -1,5 +1,10 @@
 use crate::{prelude::*, repositories::user::UserRepository};
 
+use argon2::{
+    password_hash::{rand_core::OsRng, PasswordHasher, SaltString},
+    Argon2,
+};
+
 #[derive(Deserialize)]
 pub struct RegisterRequest {
     email: String,
@@ -45,15 +50,24 @@ pub async fn post(
         .map_err(|_| RegisterError::UnexpectedError)?
         .ok_err(RegisterError::UsernameUsed)?;
 
+    // hash password with Argon2i
+    let argon2 = Argon2::default();
+    let salt = SaltString::generate(&mut OsRng);
+
+    let password_bytes = request.password.as_bytes();
+    let password_hash = argon2
+        .hash_password(password_bytes, &salt)
+        .map_err(|_| RegisterError::UnexpectedError)?
+        .to_string();
+
     // create user
-    // TODO: Hash password
     UserRepository::create_user(
         &state.sql_pool,
         &request.username,
         &request.email,
-        &request.password,
+        &password_hash,
     )
     .await
     .map_err(|_| RegisterError::UnexpectedError)
-    .map(|_| GenericResponse::ok_msg("CREATED"))
+    .map(|_| GenericResponse::status_msg(StatusCode::CREATED, "CREATED"))
 }

@@ -161,6 +161,7 @@ dependencies = [
  "dotenv",
  "dotenv_codegen",
  "hyper",
+ "rand_core",
  "serde",
  "serde_json",
  "sqlx",
@@ -1120,6 +1121,9 @@ name = "rand_core"
 version = "0.6.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d34f1408f55294453790c48b2f1ebbb1c5b4b7563eb1f418bcfcfdbb06ebb4e7"
+dependencies = [
+ "getrandom",
+]
 
 [[package]]
 name = "redox_syscall"

@@ -4,6 +4,10 @@ pub struct GenericResponse {}
 
 #[allow(dead_code)]
 impl GenericResponse {
+    pub fn status_msg(code: StatusCode, msg: &str) -> Response {
+        return (code, Json(json!({ "message": msg }))).into_response();
+    }
+
     pub fn ok_msg(msg: &str) -> Response {
         return (StatusCode::OK, Json(json!({ "message": msg }))).into_response();
     }
