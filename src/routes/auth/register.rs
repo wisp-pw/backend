@@ -13,6 +13,7 @@ pub struct RegisterRequest {
 }
 
 pub enum RegisterError {
+    InvalidEmail,
     EmailUsed,
     UsernameUsed,
     UnexpectedError,
@@ -21,6 +22,7 @@ pub enum RegisterError {
 impl IntoResponse for RegisterError {
     fn into_response(self) -> Response {
         let (status, message) = match self {
+            RegisterError::InvalidEmail => (StatusCode::BAD_REQUEST, "INVALID_EMAIL"),
             RegisterError::EmailUsed => (StatusCode::BAD_REQUEST, "EMAIL_USED"),
             RegisterError::UsernameUsed => (StatusCode::BAD_REQUEST, "USERNAME_USED"),
             RegisterError::UnexpectedError => (
@@ -38,6 +40,11 @@ pub async fn post(
     Extension(state): Extension<Arc<WispState>>,
     Json(request): Json<RegisterRequest>,
 ) -> Result<Response, RegisterError> {
+    // validate email address
+    if !EmailAddress::is_valid(&request.email) {
+        return Err(RegisterError::InvalidEmail);
+    }
+
     // check email is not in use
     UserRepository::get_user_by_email(&state.sql_pool, &request.email)
         .await
