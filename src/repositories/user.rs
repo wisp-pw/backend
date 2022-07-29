@@ -1,5 +1,5 @@
-use crate::{prelude::*, settings::WispSettings};
-use sqlx::{sqlite::SqlitePoolOptions, SqlitePool};
+use crate::prelude::*;
+use sqlx::SqlitePool;
 
 pub struct UserRepository {}
 
@@ -47,25 +47,38 @@ mod tests {
     use super::UserRepository;
 
     #[tokio::test]
-    async fn test() {
-        let pool = SqlitePoolOptions::new().connect("sqlite::memory:").await.unwrap();
+    async fn get_and_create() {
+        let pool = SqlitePoolOptions::new()
+            .connect("sqlite::memory:")
+            .await
+            .unwrap();
         sqlx::migrate!().run(&pool).await.unwrap();
 
         // make sure the user doesn't exist
-        let res = UserRepository::get_user_by_email(&pool, "me@lol.net").await.unwrap();
+        let res = UserRepository::get_user_by_email(&pool, "me@lol.net")
+            .await
+            .unwrap();
         assert_eq!(res.is_none(), true);
 
-        let res = UserRepository::get_user_by_username(&pool, "lily").await.unwrap();
+        let res = UserRepository::get_user_by_username(&pool, "lily")
+            .await
+            .unwrap();
         assert_eq!(res.is_none(), true);
 
         // create user
-        UserRepository::create_user(&pool, "lily", "me@lol.net", "asd123").await.unwrap();
+        UserRepository::create_user(&pool, "lily", "me@lol.net", "asd123")
+            .await
+            .unwrap();
 
         // now, make sure the user is there
-        let res = UserRepository::get_user_by_email(&pool, "me@lol.net").await.unwrap();
+        let res = UserRepository::get_user_by_email(&pool, "me@lol.net")
+            .await
+            .unwrap();
         assert_eq!(res.is_none(), false);
 
-        let res = UserRepository::get_user_by_username(&pool, "lily").await.unwrap();
+        let res = UserRepository::get_user_by_username(&pool, "lily")
+            .await
+            .unwrap();
         assert_eq!(res.is_none(), false);
     }
 }

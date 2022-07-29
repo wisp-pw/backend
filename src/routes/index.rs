@@ -9,7 +9,7 @@ mod tests {
     use crate::{prelude::*, setup_app};
 
     #[tokio::test]
-    async fn index_test() -> Result<()> {
+    async fn index() -> Result<()> {
         let (router, _) = setup_app().await.unwrap();
 
         let client = TestClient::new(router);

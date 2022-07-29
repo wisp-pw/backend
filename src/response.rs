@@ -2,6 +2,7 @@ use crate::prelude::*;
 
 pub struct GenericResponse {}
 
+#[allow(dead_code)]
 impl GenericResponse {
     pub fn ok_msg(msg: &str) -> Response {
         return (StatusCode::OK, Json(json!({ "message": msg }))).into_response();
