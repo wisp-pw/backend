@@ -7,6 +7,7 @@ mod settings;
 mod state;
 mod models;
 mod option;
+mod test;
 
 use std::{net::SocketAddr, sync::Arc};
 
@@ -17,12 +18,9 @@ use tracing_subscriber::util::SubscriberInitExt;
 
 use crate::{settings::WispSettings, state::WispState};
 
-pub async fn setup_app() -> Result<(Router, SocketAddr)> {
-    // setup settings and state
-    let settings = Arc::new(WispSettings::new()?);
+pub async fn setup_app(settings: Arc<WispSettings>) -> Result<(Router, SocketAddr)> {
+    // setup state
     let state = WispState::new(&settings).await?;
-
-    // setup setup_app
     let state = Arc::new(state);
 
     let bind_addr = settings.host.clone();
@@ -47,8 +45,12 @@ async fn main() -> Result<()> {
         .finish()
         .init();
 
-    // get setup_app instance
-    let (setup_app, bind_addr) = setup_app().await?;
+    // setup settings
+    let settings = WispSettings::from_env()?;
+    let settings = Arc::new(settings);
+
+    // get router and bind addr
+    let (setup_app, bind_addr) = setup_app(settings).await?;
 
     // serve app
     info!("Listening on http://{bind_addr}");

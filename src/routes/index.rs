@@ -6,13 +6,11 @@ pub async fn get() -> impl IntoResponse {
 
 #[cfg(test)]
 mod tests {
-    use crate::{prelude::*, setup_app};
+    use crate::prelude::*;
 
     #[tokio::test]
     async fn index() -> Result<()> {
-        let (router, _) = setup_app().await.unwrap();
-
-        let client = TestClient::new(router);
+        let client = get_test_client().await?;
         let response = client.get("/").send().await;
 
         assert_eq!(response.status(), StatusCode::OK);

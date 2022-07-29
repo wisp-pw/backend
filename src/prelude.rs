@@ -25,4 +25,4 @@ pub use crate::state::*;
 pub use tower::{Service, ServiceExt};
 
 #[cfg(test)]
-pub use axum_test_helper::TestClient;
+pub use crate::test::*;
