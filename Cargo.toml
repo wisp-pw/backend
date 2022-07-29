@@ -19,6 +19,7 @@ dotenv = "0.15.0"
 dotenv_codegen = "0.15.0"
 argon2 = "0.4.1"
 rand_core = { version = "0.6", features = ["std"] }
+email_address = "0.2.1"
 
 [dev-dependencies]
 axum-test-helper = "0.1.1"

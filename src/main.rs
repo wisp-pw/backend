@@ -29,6 +29,7 @@ pub async fn setup_app() -> Result<(Router, SocketAddr)> {
     let setup_app = Router::new()
         .route("/", get(routes::index::get))
         .route("/auth/register", post(routes::auth::register::post))
+        .route("/auth/login", post(routes::auth::login::post))
         .layer(Extension(settings))
         .layer(Extension(state));
 

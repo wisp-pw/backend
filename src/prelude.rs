@@ -13,6 +13,7 @@ pub use axum::{
 };
 pub use serde::{Deserialize, Serialize};
 pub use serde_json::json;
+pub use email_address::EmailAddress;
 
 pub use crate::response::*;
 pub use crate::settings::*;
