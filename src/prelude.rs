@@ -3,7 +3,7 @@ pub use dotenv_codegen::dotenv;
 pub use std::sync::Arc;
 pub use tracing::log::{debug, error, info, trace, warn};
 
-pub use crate::models::user::User;
+pub use crate::models::user::UserDTO;
 pub use crate::option::OptionExtension;
 
 pub use axum::{

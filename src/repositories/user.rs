@@ -21,8 +21,8 @@ impl UserRepository {
         Ok(())
     }
 
-    pub async fn get_user_by_email(pool: &SqlitePool, email: &str) -> Result<Option<User>> {
-        let user = sqlx::query_as::<_, User>("SELECT * FROM users where email = $1;")
+    pub async fn get_user_by_email(pool: &SqlitePool, email: &str) -> Result<Option<UserDTO>> {
+        let user = sqlx::query_as::<_, UserDTO>("SELECT * FROM users where email = $1;")
             .bind(email)
             .fetch_optional(pool)
             .await?;
@@ -30,8 +30,8 @@ impl UserRepository {
         Ok(user)
     }
 
-    pub async fn get_user_by_username(pool: &SqlitePool, username: &str) -> Result<Option<User>> {
-        let user = sqlx::query_as::<_, User>("SELECT * FROM users where safe_username = $1;")
+    pub async fn get_user_by_username(pool: &SqlitePool, username: &str) -> Result<Option<UserDTO>> {
+        let user = sqlx::query_as::<_, UserDTO>("SELECT * FROM users where safe_username = $1;")
             .bind(username.to_string().to_lowercase())
             .fetch_optional(pool)
             .await?;
