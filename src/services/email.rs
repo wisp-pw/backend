@@ -28,9 +28,10 @@ impl EmailService {
         let credentials =
             Credentials::new(settings.email_user.clone(), settings.email_pass.clone());
 
-        let mut transport = SmtpClient::new(settings.email_host.clone())
-            .credentials(credentials)
-            .into_transport();
+        let mut transport =
+            SmtpClient::new_host_port(settings.email_host.clone(), settings.email_port)
+                .credentials(credentials)
+                .into_transport();
 
         transport.send(body).await?;
         Ok(())
