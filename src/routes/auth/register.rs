@@ -1,4 +1,8 @@
-use crate::{prelude::*, repositories::user::UserRepository};
+use crate::{
+    prelude::*,
+    repositories::{email_confirmations::EmailConfirmationRepository, user::UserRepository},
+    services::email::EmailService,
+};
 
 use argon2::{
     password_hash::{rand_core::OsRng, PasswordHasher, SaltString},
@@ -38,6 +42,7 @@ impl IntoResponse for RegisterError {
 
 pub async fn post(
     Extension(state): Extension<Arc<WispState>>,
+    Extension(settings): Extension<Arc<WispSettings>>,
     Json(request): Json<RegisterRequest>,
 ) -> Result<Response, RegisterError> {
     // validate email address
@@ -67,14 +72,32 @@ pub async fn post(
         .map_err(|_| RegisterError::UnexpectedError)?
         .to_string();
 
+    // if there are no users auto confirm the first user
+    let auto_confirm = UserRepository::is_empty(&state.sql_pool)
+        .await
+        .map_err(|_| RegisterError::UnexpectedError)?;
+
     // create user
-    UserRepository::create_user(
+    let user_id = UserRepository::create_user(
         &state.sql_pool,
         &request.username,
         &request.email,
         &password_hash,
+        auto_confirm,
     )
     .await
-    .map_err(|_| RegisterError::UnexpectedError)
-    .map(|_| GenericResponse::status_msg(StatusCode::CREATED, "CREATED"))
+    .map_err(|_| RegisterError::UnexpectedError)?;
+
+    // send confirmation email if we arent automatically confirming the user
+    if !auto_confirm && settings.email_enabled {
+        let code = EmailConfirmationRepository::create(&state.sql_pool, user_id)
+            .await
+            .map_err(|_| RegisterError::UnexpectedError)?;
+
+        EmailService::send_confirmation_email(&settings, &request.email, &code)
+            .await
+            .map_err(|_| RegisterError::UnexpectedError)?;
+    }
+
+    Ok(GenericResponse::status_msg(StatusCode::CREATED, "CREATED"))
 }
