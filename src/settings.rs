@@ -8,7 +8,6 @@ pub struct WispSettings {
     pub email_enabled: bool,
     pub email_from: String,
     pub email_host: String,
-    pub email_port: u16,
     pub email_user: String,
     pub email_pass: String,
 }
@@ -25,7 +24,6 @@ impl WispSettings {
                 .unwrap(),
             email_from: dotenv!("EMAIL_FROM").to_string(),
             email_host: dotenv!("EMAIL_HOST").to_string(),
-            email_port: dotenv!("EMAIL_PORT").to_string().parse::<u16>().unwrap(),
             email_user: dotenv!("EMAIL_USER").to_string(),
             email_pass: dotenv!("EMAIL_PASS").to_string(),
         })
@@ -39,7 +37,6 @@ impl WispSettings {
             email_enabled: false,
             email_from: "".to_string(),
             email_host: "".to_string(),
-            email_port: 0,
             email_user: "".to_string(),
             email_pass: "".to_string(),
         }

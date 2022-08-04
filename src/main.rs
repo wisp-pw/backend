@@ -8,6 +8,7 @@ mod state;
 mod models;
 mod option;
 mod test;
+mod error;
 
 use std::{net::SocketAddr, sync::Arc};
 

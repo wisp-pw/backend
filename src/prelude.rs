@@ -11,13 +11,14 @@ pub use axum::{
     response::{IntoResponse, Response},
     Extension, Json,
 };
+pub use email_address::EmailAddress;
 pub use serde::{Deserialize, Serialize};
 pub use serde_json::json;
-pub use email_address::EmailAddress;
 
 pub use crate::response::*;
 pub use crate::settings::*;
 pub use crate::state::*;
+pub use crate::error::*;
 
 // testing imports
 

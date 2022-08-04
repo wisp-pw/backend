@@ -10,7 +10,7 @@ color-eyre = "0.6.2"
 tracing = "0.1.35"
 tracing-subscriber = "0.3.15"
 tokio = { version = "1.20.1", features = ["full"] }
-axum = "0.5.14"
+axum = "0.5.13"
 axum-macros = "0.2.3"
 sqlx = { version = "0.6.0", features = ["runtime-tokio-rustls", "sqlite"] }
 serde = { version = "1.0.140", features = ["derive"] }
@@ -20,8 +20,8 @@ dotenv_codegen = "0.15.0"
 argon2 = "0.4.1"
 rand_core = { version = "0.6", features = ["std"] }
 email_address = "0.2.1"
-async-smtp = "0.5.0"
 uuid = { version = "1.1.2", features = ["v4", "fast-rng"] }
+lettre = { version = "0.10.1", default-features = false, features = ["smtp-transport", "builder", "tokio1-rustls-tls"] }
 
 [dev-dependencies]
 axum-test-helper = "0.1.1"

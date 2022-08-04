@@ -1,8 +1,7 @@
-use async_smtp::{
-    smtp::authentication::Credentials, Envelope, SendableEmail, SmtpClient, Transport,
-};
-
 use crate::prelude::*;
+
+use lettre::transport::smtp::authentication::Credentials;
+use lettre::{Message, SmtpTransport, Transport};
 
 pub struct EmailService {}
 
@@ -16,24 +15,20 @@ impl EmailService {
             return Ok(());
         }
 
-        let body = SendableEmail::new(
-            Envelope::new(
-                Some(settings.email_from.parse().unwrap()),
-                vec![email.parse().unwrap()],
-            )?,
-            "Wisp confirmation email",
-            "Code is ".to_string() + code,
-        );
+        let email = Message::builder()
+            .from(settings.email_from.parse().unwrap())
+            .to(email.to_string().parse().unwrap())
+            .subject("wisp.pw email confirmation")
+            .body(String::from("Confirmation code is ") + code)
+            .unwrap();
 
-        let credentials =
-            Credentials::new(settings.email_user.clone(), settings.email_pass.clone());
+        let creds = Credentials::new(settings.email_user.clone(), settings.email_pass.clone());
+        let mailer = SmtpTransport::starttls_relay(&settings.email_host)?
+            .credentials(creds)
+            .build();
 
-        let mut transport =
-            SmtpClient::new_host_port(settings.email_host.clone(), settings.email_port)
-                .credentials(credentials)
-                .into_transport();
+        mailer.send(&email)?;
 
-        transport.send(body).await?;
         Ok(())
     }
 }
