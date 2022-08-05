@@ -53,13 +53,13 @@ pub async fn post(
     // check email is not in use
     UserRepository::get_user_by_email(&state.sql_pool, &request.email)
         .await
-        .handle_err(RegisterError::UnexpectedError)?
+        .map_err(handle_err!(RegisterError::UnexpectedError))?
         .ok_err(RegisterError::EmailUsed)?;
 
     // check username is not in use
     UserRepository::get_user_by_username(&state.sql_pool, &request.username)
         .await
-        .handle_err(RegisterError::UnexpectedError)?
+        .map_err(handle_err!(RegisterError::UnexpectedError))?
         .ok_err(RegisterError::UsernameUsed)?;
 
     // hash password with Argon2i
@@ -69,13 +69,13 @@ pub async fn post(
     let password_bytes = request.password.as_bytes();
     let password_hash = argon2
         .hash_password(password_bytes, &salt)
-        .handle_err(RegisterError::UnexpectedError)?
+        .map_err(handle_err!(RegisterError::UnexpectedError))?
         .to_string();
 
     // if there are no users auto confirm the first user
     let auto_confirm = UserRepository::is_empty(&state.sql_pool)
         .await
-        .handle_err(RegisterError::UnexpectedError)?;
+        .map_err(handle_err!(RegisterError::UnexpectedError))?;
 
     // create user
     let user_id = UserRepository::create_user(
@@ -86,17 +86,17 @@ pub async fn post(
         auto_confirm,
     )
     .await
-    .handle_err(RegisterError::UnexpectedError)?;
+    .map_err(handle_err!(RegisterError::UnexpectedError))?;
 
     // send confirmation email if we arent automatically confirming the user
     if !auto_confirm && settings.email_enabled {
         let code = EmailConfirmationRepository::create(&state.sql_pool, user_id)
             .await
-            .handle_err(RegisterError::UnexpectedError)?;
+            .map_err(handle_err!(RegisterError::UnexpectedError))?;
 
         EmailService::send_confirmation_email(&settings, &request.email, &code)
             .await
-            .handle_err(RegisterError::UnexpectedError)?;
+            .map_err(handle_err!(RegisterError::UnexpectedError))?;
     }
 
     Ok(GenericResponse::status_msg(StatusCode::CREATED, "CREATED"))

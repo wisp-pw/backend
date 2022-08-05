@@ -44,22 +44,22 @@ pub async fn post(
     let user = if logging_in_with_email {
         UserRepository::get_user_by_email(&state.sql_pool, &request.email_or_username)
             .await
-            .handle_err(LoginError::UnexpectedError)?
+            .map_err(handle_err!(LoginError::UnexpectedError))?
             .ok_or(LoginError::InvalidEmail)?
     } else {
         UserRepository::get_user_by_username(&state.sql_pool, &request.email_or_username)
             .await
-            .handle_err(LoginError::UnexpectedError)?
+            .map_err(handle_err!(LoginError::UnexpectedError))?
             .ok_or(LoginError::InvalidUsername)?
     };
 
     // validate the password
     let password_hash =
-        PasswordHash::new(&user.password_hash).handle_err(LoginError::UnexpectedError)?;
+        PasswordHash::new(&user.password_hash).map_err(handle_err!(LoginError::UnexpectedError))?;
 
     Argon2::default()
         .verify_password(request.password.as_bytes(), &password_hash)
-        .handle_err(LoginError::InvalidPassword)?;
+        .map_err(handle_err!(LoginError::InvalidPassword))?;
 
     // TODO: Create access token
     Ok(GenericResponse::ok_msg("token here"))
