@@ -1,5 +1,4 @@
 pub use color_eyre::Result;
-pub use dotenv_codegen::dotenv;
 pub use std::sync::Arc;
 pub use tracing::log::{debug, error, info, trace, warn};
 
@@ -19,6 +18,10 @@ pub use crate::response::*;
 pub use crate::settings::*;
 pub use crate::state::*;
 pub use crate::error::*;
+
+pub fn env(var: &str) -> String {
+    std::env::var(var).unwrap()
+}
 
 // testing imports
 

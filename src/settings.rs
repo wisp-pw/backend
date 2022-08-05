@@ -14,18 +14,15 @@ pub struct WispSettings {
 
 impl WispSettings {
     pub fn from_env() -> Result<WispSettings> {
-        let host = dotenv!("HOST").to_string().parse::<SocketAddr>()?;
+        let host = env("HOST").parse::<SocketAddr>()?;
         Ok(WispSettings {
             host,
-            db_uri: dotenv!("DB_URI").to_string(),
-            email_enabled: dotenv!("EMAIL_ENABLED")
-                .to_string()
-                .parse::<bool>()
-                .unwrap(),
-            email_from: dotenv!("EMAIL_FROM").to_string(),
-            email_host: dotenv!("EMAIL_HOST").to_string(),
-            email_user: dotenv!("EMAIL_USER").to_string(),
-            email_pass: dotenv!("EMAIL_PASS").to_string(),
+            db_uri: env("DB_URI"),
+            email_enabled: env("EMAIL_ENABLED").parse::<bool>().unwrap(),
+            email_from: env("EMAIL_FROM"),
+            email_host: env("EMAIL_HOST"),
+            email_user: env("EMAIL_USER"),
+            email_pass: env("EMAIL_PASS"),
         })
     }
 
