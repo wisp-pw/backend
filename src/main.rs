@@ -37,6 +37,8 @@ pub async fn setup_app(settings: Arc<WispSettings>) -> Result<(Router, SocketAdd
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    dotenv::dotenv()?;
+
     // setup logging
     color_eyre::install()?;
 
