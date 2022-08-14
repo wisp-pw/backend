@@ -30,8 +30,8 @@ impl WispSettings {
             email_host: env("EMAIL_HOST"),
             email_user: env("EMAIL_USER"),
             email_pass: env("EMAIL_PASS"),
-            storage_type: env("STORAGE_TYPE").to_string().parse().unwrap(),
-            fs_storage_path: env("FS_STORAGE_PATH").to_string(),
+            storage_type: env("STORAGE_TYPE").parse().unwrap(),
+            fs_storage_path: env("FS_STORAGE_PATH"),
         })
     }
 

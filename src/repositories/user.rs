@@ -71,12 +71,12 @@ mod tests {
         let res = UserRepository::get_user_by_email(&pool, "me@lol.net")
             .await
             .unwrap();
-        assert_eq!(res.is_none(), true);
+        assert!(res.is_none());
 
         let res = UserRepository::get_user_by_username(&pool, "lily")
             .await
             .unwrap();
-        assert_eq!(res.is_none(), true);
+        assert!(res.is_none());
 
         // create user
         UserRepository::create_user(&pool, "lily", "me@lol.net", "asd123", false)
@@ -87,11 +87,11 @@ mod tests {
         let res = UserRepository::get_user_by_email(&pool, "me@lol.net")
             .await
             .unwrap();
-        assert_eq!(res.is_none(), false);
+        assert!(res.is_some());
 
         let res = UserRepository::get_user_by_username(&pool, "lily")
             .await
             .unwrap();
-        assert_eq!(res.is_none(), false);
+        assert!(res.is_some());
     }
 }

@@ -36,7 +36,7 @@ pub async fn setup_app(settings: Arc<WispSettings>) -> Result<(Router, SocketAdd
 
     let file_save_service = FileSaveService::new(file_repository);
 
-    let bind_addr = settings.host.clone();
+    let bind_addr = settings.host;
     let setup_app = Router::new()
         .route("/", get(routes::index::get))
         .route("/auth/register", post(routes::auth::register::post))
