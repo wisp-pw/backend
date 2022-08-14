@@ -2,6 +2,11 @@ use crate::prelude::*;
 
 use std::net::SocketAddr;
 
+custom_derive! {
+    #[derive(Debug, EnumFromStr)]
+    pub enum StorageType { Memory, Fs }
+}
+
 pub struct WispSettings {
     pub host: SocketAddr,
     pub db_uri: String,
@@ -10,6 +15,8 @@ pub struct WispSettings {
     pub email_host: String,
     pub email_user: String,
     pub email_pass: String,
+    pub storage_type: StorageType,
+    pub fs_storage_path: String,
 }
 
 impl WispSettings {
@@ -23,6 +30,8 @@ impl WispSettings {
             email_host: env("EMAIL_HOST"),
             email_user: env("EMAIL_USER"),
             email_pass: env("EMAIL_PASS"),
+            storage_type: env("STORAGE_TYPE").to_string().parse().unwrap(),
+            fs_storage_path: env("FS_STORAGE_PATH").to_string(),
         })
     }
 
@@ -36,6 +45,8 @@ impl WispSettings {
             email_host: "".to_string(),
             email_user: "".to_string(),
             email_pass: "".to_string(),
+            storage_type: StorageType::Memory,
+            fs_storage_path: "".to_string(),
         }
     }
 }

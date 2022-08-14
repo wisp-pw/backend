@@ -9,7 +9,7 @@ pub struct WispState {
 }
 
 impl WispState {
-    pub async fn new(settings: &Arc<WispSettings>) -> Result<WispState> {
+    pub async fn new(settings: &Arc<WispSettings>) -> Result<Self> {
         let pool = SqlitePoolOptions::new().connect(&settings.db_uri).await?;
         sqlx::migrate!().run(&pool).await?;
 

@@ -1,3 +1,6 @@
+mod error;
+mod models;
+mod option;
 mod prelude;
 mod repositories;
 mod response;
@@ -5,15 +8,17 @@ mod routes;
 mod services;
 mod settings;
 mod state;
-mod models;
-mod option;
 mod test;
-mod error;
 
 use std::{net::SocketAddr, sync::Arc};
 
-use axum::{routing::{get, post}, Router};
+use axum::{
+    routing::{get, post},
+    Router,
+};
 use prelude::*;
+use repositories::file::{FileRepository, FsFileRepository, MemoryFileRepository};
+use services::file_save::FileSaveService;
 use tracing::Level;
 use tracing_subscriber::util::SubscriberInitExt;
 
@@ -24,13 +29,22 @@ pub async fn setup_app(settings: Arc<WispSettings>) -> Result<(Router, SocketAdd
     let state = WispState::new(&settings).await?;
     let state = Arc::new(state);
 
+    let file_repository: Box<dyn FileRepository + Send + Sync> = match settings.storage_type {
+        StorageType::Memory => Box::new(MemoryFileRepository::new()),
+        StorageType::Fs => Box::new(FsFileRepository::new(&settings)),
+    };
+
+    let file_save_service = FileSaveService::new(file_repository);
+
     let bind_addr = settings.host.clone();
     let setup_app = Router::new()
         .route("/", get(routes::index::get))
         .route("/auth/register", post(routes::auth::register::post))
         .route("/auth/login", post(routes::auth::login::post))
+        .route("/upload", post(routes::upload::post))
         .layer(Extension(settings))
-        .layer(Extension(state));
+        .layer(Extension(state))
+        .layer(Extension(file_save_service));
 
     Ok((setup_app, bind_addr))
 }
