@@ -12,8 +12,8 @@ impl FileSaveService {
         Arc::new(RwLock::new(FileSaveService { repo }))
     }
 
-    pub fn save(&mut self, name: String, bytes: &[u8]) -> Result<()> {
-        self.repo.save_file(name, bytes)
+    pub fn save(&mut self, file_type: FileType, name: String, bytes: &[u8]) -> Result<()> {
+        self.repo.save_file(file_type, name, bytes)
     }
 }
 

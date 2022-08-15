@@ -6,8 +6,20 @@ use crate::prelude::*;
 pub use self::fs::FsFileRepository;
 pub use self::memory::MemoryFileRepository;
 
-pub trait FileRepository {
-    fn save_file(&mut self, name: String, bytes: &[u8]) -> Result<()>;
+pub enum FileType {
+    Image,
+}
 
-    fn get_file(&mut self, name: String) -> Option<&bytes::Bytes>;
+impl ToString for FileType {
+    fn to_string(&self) -> String {
+        match self {
+            FileType::Image => String::from("images"),
+        }
+    }
+}
+
+pub trait FileRepository {
+    fn save_file(&mut self, file_type: FileType, name: String, bytes: &[u8]) -> Result<()>;
+
+    fn get_file(&mut self, file_type: FileType, name: String) -> Result<Option<Vec<u8>>>;
 }

@@ -1,4 +1,4 @@
-use crate::prelude::*;
+use crate::{prelude::*, repositories::file::FileType};
 use axum::extract::Multipart;
 
 // POST /upload
@@ -33,7 +33,7 @@ pub async fn post(
     file_save_service
         .write()
         .unwrap()
-        .save(img_name.clone(), img_data.unwrap().as_slice())
+        .save(FileType::Image, img_name.clone(), img_data.unwrap().as_slice())
         .unwrap();
 
     GenericResponse::ok_msg(&("https://wisp.pw/".to_string() + &img_name))
