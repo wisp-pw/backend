@@ -8,6 +8,8 @@ mod routes;
 mod services;
 mod settings;
 mod state;
+
+#[cfg(test)]
 mod test;
 
 use std::{net::SocketAddr, sync::Arc};

@@ -61,6 +61,10 @@ pub async fn post(
         .verify_password(request.password.as_bytes(), &password_hash)
         .map_err(handle_err!(LoginError::InvalidPassword))?;
 
-    // TODO: Create access token
-    Ok(GenericResponse::ok_msg("token here"))
+    let access_token = state
+        .jwt_service
+        .generate_access_token(user)
+        .map_err(|_| LoginError::UnexpectedError)?;
+
+    Ok(GenericResponse::ok_msg(&access_token))
 }

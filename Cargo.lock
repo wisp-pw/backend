@@ -167,6 +167,7 @@ dependencies = [
  "enum_derive",
  "hashbrown",
  "hyper",
+ "jwts",
  "lettre",
  "rand_core",
  "serde",
@@ -812,6 +813,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "258451ab10b34f8af53416d1fdab72c22e805f0c92a1136d59470ec0b11138b2"
 dependencies = [
  "wasm-bindgen",
+]
+
+[[package]]
+name = "jwts"
+version = "0.2.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7963396fcb43776ecb5f7cee622361ade18a0b5665c76df9721f1e0a8806d4ea"
+dependencies = [
+ "base64",
+ "ring",
+ "serde",
+ "serde_derive",
+ "serde_json",
 ]
 
 [[package]]

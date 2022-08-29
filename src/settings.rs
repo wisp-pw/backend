@@ -17,6 +17,7 @@ pub struct WispSettings {
     pub email_pass: String,
     pub storage_type: StorageType,
     pub fs_storage_path: String,
+    pub jwt_secret: String,
 }
 
 impl WispSettings {
@@ -32,6 +33,7 @@ impl WispSettings {
             email_pass: env("EMAIL_PASS"),
             storage_type: env("STORAGE_TYPE").parse().unwrap(),
             fs_storage_path: env("FS_STORAGE_PATH"),
+            jwt_secret: env("JWT_SECRET"),
         })
     }
 
@@ -47,6 +49,7 @@ impl WispSettings {
             email_pass: "".to_string(),
             storage_type: StorageType::Memory,
             fs_storage_path: "".to_string(),
+            jwt_secret: "uwuuwuuwuuwu".to_string(),
         }
     }
 }
