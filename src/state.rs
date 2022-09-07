@@ -17,6 +17,9 @@ impl WispState {
 
         let jwt_service = JwtService::new(&settings.jwt_secret);
 
-        Ok(WispState { sql_pool: pool, jwt_service })
+        Ok(WispState {
+            sql_pool: pool,
+            jwt_service,
+        })
     }
 }

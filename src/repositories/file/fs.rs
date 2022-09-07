@@ -2,7 +2,7 @@ use std::{fs, path::Path};
 
 use crate::prelude::*;
 
-use super::{FileType, FileRepository};
+use super::{FileRepository, FileType};
 
 pub struct FsFileRepository {
     base_path: String,

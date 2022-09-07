@@ -2,7 +2,7 @@ use hashbrown::HashMap;
 
 use crate::prelude::*;
 
-use super::{FileType, FileRepository};
+use super::{FileRepository, FileType};
 
 pub struct MemoryFileRepository {
     files: HashMap<String, Vec<u8>>,

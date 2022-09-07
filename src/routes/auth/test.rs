@@ -95,7 +95,7 @@ mod tests {
             assert_eq!(response.status(), StatusCode::CREATED);
         }
 
-        // then attempt an invalid login
+        // then attempt a valid login
         {
             let request = LoginRequest {
                 email_or_username: "lily".to_string(),
@@ -139,7 +139,7 @@ mod tests {
                 username: "lily".to_string(),
                 password: "boobies".to_string(),
             };
-    
+
             let response = client.post("/auth/register").json(&request).send().await;
             assert_eq!(response.status(), StatusCode::CREATED);
         }
@@ -151,7 +151,7 @@ mod tests {
                 username: "lily2".to_string(),
                 password: "boobies".to_string(),
             };
-    
+
             let response = client.post("/auth/register").json(&request).send().await;
             assert_eq!(response.status(), StatusCode::BAD_REQUEST);
 
@@ -173,7 +173,7 @@ mod tests {
                 username: "lily".to_string(),
                 password: "boobies".to_string(),
             };
-    
+
             let response = client.post("/auth/register").json(&request).send().await;
             assert_eq!(response.status(), StatusCode::CREATED);
         }
@@ -185,7 +185,7 @@ mod tests {
                 username: "lily".to_string(),
                 password: "boobies".to_string(),
             };
-    
+
             let response = client.post("/auth/register").json(&request).send().await;
             assert_eq!(response.status(), StatusCode::BAD_REQUEST);
 

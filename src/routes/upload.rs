@@ -33,7 +33,11 @@ pub async fn post(
     file_save_service
         .write()
         .unwrap()
-        .save(FileType::Image, img_name.clone(), img_data.unwrap().as_slice())
+        .save(
+            FileType::Image,
+            img_name.clone(),
+            img_data.unwrap().as_slice(),
+        )
         .unwrap();
 
     GenericResponse::ok_msg(&("https://wisp.pw/".to_string() + &img_name))
