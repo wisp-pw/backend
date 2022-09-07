@@ -11,19 +11,19 @@ impl EmailService {
         email: &str,
         code: &str,
     ) -> Result<()> {
-        if !settings.email_enabled {
+        if !settings.email.enabled {
             return Ok(());
         }
 
         let email = Message::builder()
-            .from(settings.email_from.parse().unwrap())
+            .from(settings.email.from.parse().unwrap())
             .to(email.to_string().parse().unwrap())
             .subject("wisp.pw email confirmation")
             .body(String::from("Confirmation code is ") + code)
             .unwrap();
 
-        let creds = Credentials::new(settings.email_user.clone(), settings.email_pass.clone());
-        let mailer = SmtpTransport::starttls_relay(&settings.email_host)?
+        let creds = Credentials::new(settings.email.user.clone(), settings.email.pass.clone());
+        let mailer = SmtpTransport::starttls_relay(&settings.email.host)?
             .credentials(creds)
             .build();
 

@@ -34,7 +34,7 @@ impl JwtService {
         token.sign(&key)
     }
 
-    pub fn get_token_data(&self, token: String) -> Result<(Option<i32>, bool)> {
+    pub fn _get_token_data(&self, _token: String) -> Result<(Option<i32>, bool)> {
         Ok((None, false))
     }
 }

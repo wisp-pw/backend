@@ -89,7 +89,7 @@ pub async fn post(
     .map_err(handle_err!(RegisterError::UnexpectedError))?;
 
     // send confirmation email if we arent automatically confirming the user
-    if !auto_confirm && settings.email_enabled {
+    if !auto_confirm && settings.email.enabled {
         let code = EmailConfirmationRepository::create(&state.sql_pool, user_id)
             .await
             .map_err(handle_err!(RegisterError::UnexpectedError))?;

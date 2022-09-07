@@ -37,6 +37,6 @@ impl FileRepository for FsFileRepository {
         }
 
         let bytes = fs::read(path)?;
-        return Ok(Some(bytes));
+        Ok(Some(bytes))
     }
 }
