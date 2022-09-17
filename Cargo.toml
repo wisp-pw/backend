@@ -15,8 +15,6 @@ axum-macros = "0.2.3"
 sqlx = { version = "0.6.0", features = ["runtime-tokio-rustls", "sqlite"] }
 serde = { version = "1.0.140", features = ["derive"] }
 serde_json = "1.0.82"
-dotenv = "0.15.0"
-dotenv_codegen = "0.15.0"
 argon2 = "0.4.1"
 rand_core = { version = "0.6", features = ["std"] }
 email_address = "0.2.1"
@@ -24,9 +22,9 @@ uuid = { version = "1.1.2", features = ["v4", "fast-rng"] }
 lettre = { version = "0.10.1", default-features = false, features = ["smtp-transport", "builder", "tokio1-rustls-tls"] }
 bytes = "1.2.1"
 hashbrown = "0.12.3"
-custom_derive = "0.1.7"
-enum_derive = "0.1.7"
 jwts = "0.2.4"
+toml = "0.5.9"
+strum = { version = "0.24.1", features = ["derive"] }
 
 [dev-dependencies]
 axum-test-helper = "0.1.1"

@@ -3,7 +3,7 @@ use sqlx::SqlitePool;
 
 use crate::prelude::*;
 use crate::services::jwt::JwtService;
-use crate::settings::WispSettings;
+use crate::config::WispConfig;
 
 pub struct WispState {
     pub sql_pool: SqlitePool,
@@ -11,11 +11,11 @@ pub struct WispState {
 }
 
 impl WispState {
-    pub async fn new(settings: &Arc<WispSettings>) -> Result<Self> {
+    pub async fn new(settings: &Arc<WispConfig>) -> Result<Self> {
         let pool = SqlitePoolOptions::new().connect(&settings.db_uri).await?;
         sqlx::migrate!().run(&pool).await?;
 
-        let jwt_service = JwtService::new(&settings.jwt_secret);
+        let jwt_service = JwtService::new(&settings.jwt.secret);
 
         Ok(WispState {
             sql_pool: pool,

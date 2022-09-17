@@ -6,7 +6,7 @@ mod repositories;
 mod response;
 mod routes;
 mod services;
-mod settings;
+mod config;
 mod state;
 
 #[cfg(test)]
@@ -24,14 +24,14 @@ use services::file_save::FileSaveService;
 use tracing::Level;
 use tracing_subscriber::util::SubscriberInitExt;
 
-use crate::{settings::WispSettings, state::WispState};
+use crate::{config::WispConfig, state::WispState};
 
-pub async fn setup_app(settings: Arc<WispSettings>) -> Result<(Router, SocketAddr)> {
+pub async fn setup_app(settings: Arc<WispConfig>) -> Result<(Router, SocketAddr)> {
     // setup state
     let state = WispState::new(&settings).await?;
     let state = Arc::new(state);
 
-    let file_repository: Box<dyn FileRepository + Send + Sync> = match settings.storage_type {
+    let file_repository: Box<dyn FileRepository + Send + Sync> = match settings.file.storage_type {
         StorageType::Memory => Box::new(MemoryFileRepository::new()),
         StorageType::Fs => Box::new(FsFileRepository::new(&settings)),
     };
@@ -53,8 +53,6 @@ pub async fn setup_app(settings: Arc<WispSettings>) -> Result<(Router, SocketAdd
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    dotenv::dotenv()?;
-
     // setup logging
     color_eyre::install()?;
 
@@ -65,7 +63,7 @@ async fn main() -> Result<()> {
         .init();
 
     // setup settings
-    let settings = WispSettings::from_env()?;
+    let settings = WispConfig::from_file()?;
     let settings = Arc::new(settings);
 
     // get router and bind addr

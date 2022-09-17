@@ -42,7 +42,7 @@ impl IntoResponse for RegisterError {
 
 pub async fn post(
     Extension(state): Extension<Arc<WispState>>,
-    Extension(settings): Extension<Arc<WispSettings>>,
+    Extension(settings): Extension<Arc<WispConfig>>,
     Json(request): Json<RegisterRequest>,
 ) -> Result<Response, RegisterError> {
     // validate email address

@@ -7,7 +7,7 @@ pub struct EmailService {}
 
 impl EmailService {
     pub async fn send_confirmation_email(
-        settings: &Arc<WispSettings>,
+        settings: &Arc<WispConfig>,
         email: &str,
         code: &str,
     ) -> Result<()> {

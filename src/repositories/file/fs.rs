@@ -9,9 +9,9 @@ pub struct FsFileRepository {
 }
 
 impl FsFileRepository {
-    pub fn new(settings: &Arc<WispSettings>) -> Self {
+    pub fn new(settings: &Arc<WispConfig>) -> Self {
         FsFileRepository {
-            base_path: settings.fs_storage_path.clone(),
+            base_path: settings.file.fs_storage_path.clone(),
         }
     }
 }
